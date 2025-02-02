@@ -6,90 +6,313 @@
   <title>ChairForce MVP</title>
   <style>
     body {
-      background: url('stars.png') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
       overflow: hidden;
-    }
-    .container {
-      text-align: center;
-      position: relative;
-      width: 100%;
+      background: url('stars.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: white;
       height: 100vh;
+      position: relative;
     }
-    .logo {
-      width: 200px;
+    /* Container covering the entire viewport for displaying twinkling stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* Each twinkling star uses "dantheman.jpg"; its size is set dynamically in JS */
+    .star {
       position: absolute;
-      transform: translateX(-50%);
+      background: url('dantheman.jpg') no-repeat center center;
+      background-size: cover;
+      /* Width and height will be randomized (10px to 30px) in JavaScript */
+      opacity: 0.5;
+      animation-name: twinkle;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
     }
-    h1 {
-      color: #4a90e2;
-      animation: fadeIn 2s;
+    @keyframes twinkle {
+      0%   { opacity: 0.5; }
+      50%  { opacity: 1; }
+      100% { opacity: 0.5; }
     }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    /* Styling for shooting stars; their background image is chosen dynamically */
+    .shooting-star {
+      position: absolute;
+      width: 5vw;
+      height: 5vw;
+      /* Background image is set dynamically from a list of shootingImages */
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      animation: shooting 3s linear infinite;
+    }
+    @keyframes shooting {
+      0% {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(120vw, 120vh);
+        opacity: 0;
+      }
+    }
+    /* Text container; its opacity is transitioned based on ChairForce acceleration */
+    .text {
+      position: fixed;
+      top: 10%;
+      width: 100%;
+      text-align: center;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 3s linear;
+    }
+    /* ChairForce image styling; horizontal centering and sway via transform */
+    .chairforce {
+      position: absolute;
+      width: 30vw;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <img src="chairforce.png" alt="ChairForce Logo" class="logo">
-    <h1>ChairForce</h1>
-    <p>We Do Chairs</p>
+  <!-- Stars container for twinkling star elements -->
+  <div class="stars" id="stars"></div>
+  
+  <div class="text" id="text">
+    <h1>Welcome to ChairForce</h1>
+    <p>Your Platform for Innovation and Excellence</p>
+    <div class="contact-info">
+      <div class="contact-box">
+        <h2>Contact Us</h2>
+        <p>Email: contact@chairforce.com</p>
+        <p>Phone: 1-800-CHAIR</p>
+      </div>
+      <div class="contact-box">
+        <h2>What We Do</h2>
+        <p>We revolutionize sitting technology.</p>
+        <p>Our chairs are faster than ever.</p>
+      </div>
+      <div class="contact-box">
+        <h2>Our Mission</h2>
+        <p>"To boldly sit where no one has sat before."</p>
+      </div>
+    </div>
   </div>
-  <script>
-    const logo = document.querySelector(".logo");
-    const container = document.querySelector(".container");
-    let positionY = container.clientHeight - logo.clientHeight;
-    let velocity = 0;
-    const acceleration = 0.5;
-    const friction = 0.99;
-    let isSpacePressed = false;
-
-    function updateLogoPosition() {
-      logo.style.top = positionY + "px";
-      logo.style.left = "50%";
+  
+  <style>
+    .text {
+      position: fixed;
+      top: 10%;
+      width: 100%;
+      text-align: center;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 3s linear;
+      font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      padding: 0 20px;
     }
-
+    .text h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin: 0 0 10px 0;
+    }
+    .text p {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .contact-info {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .contact-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      width: calc(33% - 40px);
+      min-width: 250px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+      color: #ffffff;
+      text-align: left;
+    }
+    .contact-box h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .contact-box p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+  </style>  
+  <img src="chairforce.png" alt="ChairForce" class="chairforce" id="chairforce">
+  
+  <script>
+    // Create twinkling stars using "dantheman.jpg" as the star image.
+    const starsContainer = document.getElementById('stars');
+    const numberOfStars = 50; // Total number of twinkling stars to generate.
+    for (let i = 0; i < numberOfStars; i++) {
+      let star = document.createElement('div');
+      star.classList.add('star');
+      // Set a random initial position within the viewport.
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      // Set a random size between 10px and 30px.
+      let size = 10 + Math.random() * 20;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      // Randomize the animation delay and duration for a varied twinkling effect.
+      star.style.animationDelay = Math.random() * 2 + 's';
+      star.style.animationDuration = 1.5 + Math.random() * 2 + 's';
+      // After each complete twinkle cycle, reposition the star randomly.
+      star.addEventListener("animationiteration", () => {
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+      });
+      starsContainer.appendChild(star);
+    }
+    
+    // Array of images for shooting stars.
+    const shootingImages = [
+      "dantheman.jpg",
+      "progressive.png"
+    ];
+    
+    // Create 2 shooting star instances.
+    const shootingStarsCount = 2;
+    for (let i = 0; i < shootingStarsCount; i++) {
+      let shootingStar = document.createElement('div');
+      shootingStar.classList.add('shooting-star');
+      // Position the shooting star at a random vertical position and off-screen to the left.
+      shootingStar.style.top = Math.random() * 100 + '%';
+      shootingStar.style.left = (-10 - Math.random() * 10) + '%';
+      // Randomize the animation delay to stagger the shooting effect.
+      shootingStar.style.animationDelay = Math.random() * 5 + 's';
+      // Set a random image from the shootingImages array.
+      let randomImage = shootingImages[Math.floor(Math.random() * shootingImages.length)];
+      shootingStar.style.background = "url('" + randomImage + "') no-repeat center center";
+      shootingStar.style.backgroundSize = "cover";
+      // At the end of each shooting animation cycle, reposition and switch the image.
+      shootingStar.addEventListener("animationiteration", () => {
+        shootingStar.style.top = Math.random() * 100 + '%';
+        shootingStar.style.left = (-10 - Math.random() * 10) + '%';
+        shootingStar.style.animationDelay = Math.random() * 5 + 's';
+        let newImage = shootingImages[Math.floor(Math.random() * shootingImages.length)];
+        shootingStar.style.background = "url('" + newImage + "') no-repeat center center";
+        shootingStar.style.backgroundSize = "cover";
+      });
+      document.body.appendChild(shootingStar);
+    }
+    
+    // Game variables for controlling the ChairForce object and text.
+    const chairforce = document.getElementById("chairforce");
+    const text = document.getElementById("text");
+    const viewportHeight = window.innerHeight;
+    const centerY = viewportHeight / 2;
+    let chairY = centerY;  // Initial vertical position (centered)
+    let velocity = 0;
+    const acceleration = 0.2;         // Upward acceleration per frame when space is held.
+    const decelerationRate = 1.5;       // Downward deceleration per frame when space is released.
+    const downwardSpeed = 0.5;          // Constant speed for falling back toward center.
+    let isSpacePressed = false;
+    let accelerationTime = 0;           // Duration (ms) that space has been continuously held.
+    
+    // Text fade-in thresholds.
+    const fadeStartTime = 1000;         // Begin fading text after 1 second of acceleration.
+    const fullOpacityTime = 4000;       // Text reaches full opacity at 4 seconds.
+    
+    // Sway parameters for the ChairForce object (horizontal oscillation when moving).
+    const swayAmplitude = 20;           // Maximum horizontal offset in pixels.
+    const swayPeriod = 2000;            // Duration (ms) for one full sway oscillation.
+    
+    // Update ChairForce’s vertical position, keeping it within the viewport.
+    function updateChairforce() {
+      chairY = Math.max(0, Math.min(chairY, viewportHeight));
+      chairforce.style.top = chairY + 'px';
+    }
+    
+    // Update text opacity based on the current acceleration time.
+    function updateTextOpacity() {
+      if (accelerationTime > fadeStartTime) {
+        const opacityProgress = Math.min(1, (accelerationTime - fadeStartTime) / (fullOpacityTime - fadeStartTime));
+        text.style.opacity = opacityProgress;
+      } else {
+        text.style.opacity = 0;
+      }
+    }
+    
+    // Update horizontal sway of the ChairForce object when it’s in motion.
+    function updateSway() {
+      let offset = 0;
+      if (Math.abs(velocity) > 0.01) {
+        const time = Date.now();
+        offset = swayAmplitude * Math.sin((time / swayPeriod) * 2 * Math.PI);
+      }
+      // Apply the calculated horizontal offset while keeping the element vertically centered.
+      chairforce.style.transform = "translate(calc(-50% + " + offset + "px), -50%)";
+    }
+    
     function gameLoop() {
       if (isSpacePressed) {
         velocity += acceleration;
+        accelerationTime += 16.67; // Approximate time per frame at 60fps (in ms).
       } else {
-        velocity *= friction;
+        // When space is not pressed, reduce the upward velocity by a fixed deceleration rate.
+        if (velocity > 0) {
+          velocity = Math.max(velocity - decelerationRate, 0);
+        }
+        // If no upward movement remains and the ChairForce is above center, start moving it downward.
+        if (velocity === 0 && chairY < centerY) {
+          velocity = -downwardSpeed;
+        }
+        accelerationTime = 0; // Reset acceleration time when the spacebar is released.
       }
       
-      positionY -= velocity;
-
-      if (positionY + logo.clientHeight < 0) {
-        positionY = container.clientHeight;
-      }
-
-      updateLogoPosition();
+      // Update the vertical position; subtracting velocity moves the ChairForce upward.
+      chairY -= velocity;
+      
+      updateChairforce();
+      updateTextOpacity();
+      updateSway();
+      
       requestAnimationFrame(gameLoop);
     }
-
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Space") {
+    
+    // Listen for spacebar press to start upward acceleration.
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
         isSpacePressed = true;
         e.preventDefault();
       }
     });
-
-    document.addEventListener("keyup", (e) => {
-      if (e.code === "Space") {
+    
+    // Listen for spacebar release to trigger deceleration and eventual downward movement.
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'Space') {
         isSpacePressed = false;
         e.preventDefault();
       }
     });
-
-    updateLogoPosition();
+    
     gameLoop();
   </script>
 </body>
