@@ -15,7 +15,6 @@
       height: 100vh;
       position: relative;
     }
-    /* Container covering the entire viewport for displaying twinkling stars */
     .stars {
       position: fixed;
       top: 0;
@@ -25,12 +24,10 @@
       z-index: 1;
       pointer-events: none;
     }
-    /* Each twinkling star uses "dantheman.jpg"; its size is set dynamically in JS */
     .star {
       position: absolute;
       background: url('dantheman.jpg') no-repeat center center;
       background-size: cover;
-      /* Width and height will be randomized (10px to 30px) in JavaScript */
       opacity: 0.5;
       animation-name: twinkle;
       animation-iteration-count: infinite;
@@ -41,12 +38,10 @@
       50%  { opacity: 1; }
       100% { opacity: 0.5; }
     }
-    /* Styling for shooting stars; their background image is chosen dynamically */
     .shooting-star {
       position: absolute;
       width: 5vw;
       height: 5vw;
-      /* Background image is set dynamically from a list of shootingImages */
       z-index: 2;
       opacity: 0;
       pointer-events: none;
@@ -65,7 +60,6 @@
         opacity: 0;
       }
     }
-    /* Text container; its opacity is transitioned based on ChairForce acceleration */
     .text {
       position: fixed;
       top: 10%;
@@ -75,7 +69,6 @@
       opacity: 0;
       transition: opacity 3s linear;
     }
-    /* ChairForce image styling; horizontal centering and sway via transform */
     .chairforce {
       position: absolute;
       width: 30vw;
@@ -84,34 +77,6 @@
       transform: translate(-50%, -50%);
       z-index: 3;
     }
-  </style>
-</head>
-<body>
-  <!-- Stars container for twinkling star elements -->
-  <div class="stars" id="stars"></div>
-  
-  <div class="text" id="text">
-    <h1>Welcome to ChairForce</h1>
-    <p>Your Platform for Innovation and Excellence</p>
-    <div class="contact-info">
-      <div class="contact-box">
-        <h2>Contact Us</h2>
-        <p>Email: contact@chairforce.com</p>
-        <p>Phone: 1-800-CHAIR</p>
-      </div>
-      <div class="contact-box">
-        <h2>What We Do</h2>
-        <p>We revolutionize sitting technology.</p>
-        <p>Our chairs are faster than ever.</p>
-      </div>
-      <div class="contact-box">
-        <h2>Our Mission</h2>
-        <p>"To boldly sit where no one has sat before."</p>
-      </div>
-    </div>
-  </div>
-  
-  <style>
     .text {
       position: fixed;
       top: 10%;
@@ -163,27 +128,47 @@
       line-height: 1.5;
       margin-bottom: 5px;
     }
-  </style>  
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  
+  <div class="text" id="text">
+    <h1>Welcome to ChairForce</h1>
+    <p>Your Platform for Innovation and Excellence</p>
+    <div class="contact-info">
+      <div class="contact-box">
+        <h2>Contact Us</h2>
+        <p>Email: contact@chairforce.com</p>
+        <p>Phone: 1-800-CHAIR</p>
+      </div>
+      <div class="contact-box">
+        <h2>What We Do</h2>
+        <p>We revolutionize sitting technology.</p>
+        <p>Our chairs are faster than ever.</p>
+      </div>
+      <div class="contact-box">
+        <h2>Our Mission</h2>
+        <p>"To boldly sit where no one has sat before."</p>
+      </div>
+    </div>
+  </div>
+  
   <img src="chairforce.png" alt="ChairForce" class="chairforce" id="chairforce">
   
   <script>
-    // Create twinkling stars using "dantheman.jpg" as the star image.
     const starsContainer = document.getElementById('stars');
-    const numberOfStars = 50; // Total number of twinkling stars to generate.
+    const numberOfStars = 50;
     for (let i = 0; i < numberOfStars; i++) {
       let star = document.createElement('div');
       star.classList.add('star');
-      // Set a random initial position within the viewport.
       star.style.left = Math.random() * 100 + '%';
       star.style.top = Math.random() * 100 + '%';
-      // Set a random size between 10px and 30px.
       let size = 10 + Math.random() * 20;
       star.style.width = size + 'px';
       star.style.height = size + 'px';
-      // Randomize the animation delay and duration for a varied twinkling effect.
       star.style.animationDelay = Math.random() * 2 + 's';
       star.style.animationDuration = 1.5 + Math.random() * 2 + 's';
-      // After each complete twinkle cycle, reposition the star randomly.
       star.addEventListener("animationiteration", () => {
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
@@ -191,27 +176,21 @@
       starsContainer.appendChild(star);
     }
     
-    // Array of images for shooting stars.
     const shootingImages = [
       "dantheman.jpg",
       "progressive.png"
     ];
     
-    // Create 2 shooting star instances.
     const shootingStarsCount = 2;
     for (let i = 0; i < shootingStarsCount; i++) {
       let shootingStar = document.createElement('div');
       shootingStar.classList.add('shooting-star');
-      // Position the shooting star at a random vertical position and off-screen to the left.
       shootingStar.style.top = Math.random() * 100 + '%';
       shootingStar.style.left = (-10 - Math.random() * 10) + '%';
-      // Randomize the animation delay to stagger the shooting effect.
       shootingStar.style.animationDelay = Math.random() * 5 + 's';
-      // Set a random image from the shootingImages array.
       let randomImage = shootingImages[Math.floor(Math.random() * shootingImages.length)];
       shootingStar.style.background = "url('" + randomImage + "') no-repeat center center";
       shootingStar.style.backgroundSize = "cover";
-      // At the end of each shooting animation cycle, reposition and switch the image.
       shootingStar.addEventListener("animationiteration", () => {
         shootingStar.style.top = Math.random() * 100 + '%';
         shootingStar.style.left = (-10 - Math.random() * 10) + '%';
@@ -223,34 +202,29 @@
       document.body.appendChild(shootingStar);
     }
     
-    // Game variables for controlling the ChairForce object and text.
     const chairforce = document.getElementById("chairforce");
     const text = document.getElementById("text");
     const viewportHeight = window.innerHeight;
     const centerY = viewportHeight / 2;
-    let chairY = centerY;  // Initial vertical position (centered)
+    let chairY = centerY;
     let velocity = 0;
-    const acceleration = 0.2;         // Upward acceleration per frame when space is held.
-    const decelerationRate = 1.5;       // Downward deceleration per frame when space is released.
-    const downwardSpeed = 0.5;          // Constant speed for falling back toward center.
-    let isSpacePressed = false;
-    let accelerationTime = 0;           // Duration (ms) that space has been continuously held.
+    const acceleration = 0.2;
+    const decelerationRate = 1.5;
+    const downwardSpeed = 0.5;
+    let isPressed = false;
+    let accelerationTime = 0;
     
-    // Text fade-in thresholds.
-    const fadeStartTime = 1000;         // Begin fading text after 1 second of acceleration.
-    const fullOpacityTime = 4000;       // Text reaches full opacity at 4 seconds.
+    const fadeStartTime = 1000;
+    const fullOpacityTime = 4000;
     
-    // Sway parameters for the ChairForce object (horizontal oscillation when moving).
-    const swayAmplitude = 20;           // Maximum horizontal offset in pixels.
-    const swayPeriod = 2000;            // Duration (ms) for one full sway oscillation.
+    const swayAmplitude = 20;
+    const swayPeriod = 2000;
     
-    // Update ChairForce’s vertical position, keeping it within the viewport.
     function updateChairforce() {
       chairY = Math.max(0, Math.min(chairY, viewportHeight));
       chairforce.style.top = chairY + 'px';
     }
     
-    // Update text opacity based on the current acceleration time.
     function updateTextOpacity() {
       if (accelerationTime > fadeStartTime) {
         const opacityProgress = Math.min(1, (accelerationTime - fadeStartTime) / (fullOpacityTime - fadeStartTime));
@@ -260,34 +234,29 @@
       }
     }
     
-    // Update horizontal sway of the ChairForce object when it’s in motion.
     function updateSway() {
       let offset = 0;
       if (Math.abs(velocity) > 0.01) {
         const time = Date.now();
         offset = swayAmplitude * Math.sin((time / swayPeriod) * 2 * Math.PI);
       }
-      // Apply the calculated horizontal offset while keeping the element vertically centered.
       chairforce.style.transform = "translate(calc(-50% + " + offset + "px), -50%)";
     }
     
     function gameLoop() {
-      if (isSpacePressed) {
+      if (isPressed) {
         velocity += acceleration;
-        accelerationTime += 16.67; // Approximate time per frame at 60fps (in ms).
+        accelerationTime += 16.67;
       } else {
-        // When space is not pressed, reduce the upward velocity by a fixed deceleration rate.
         if (velocity > 0) {
           velocity = Math.max(velocity - decelerationRate, 0);
         }
-        // If no upward movement remains and the ChairForce is above center, start moving it downward.
         if (velocity === 0 && chairY < centerY) {
           velocity = -downwardSpeed;
         }
-        accelerationTime = 0; // Reset acceleration time when the spacebar is released.
+        accelerationTime = 0;
       }
       
-      // Update the vertical position; subtracting velocity moves the ChairForce upward.
       chairY -= velocity;
       
       updateChairforce();
@@ -297,20 +266,28 @@
       requestAnimationFrame(gameLoop);
     }
     
-    // Listen for spacebar press to start upward acceleration.
     document.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
-        isSpacePressed = true;
+        isPressed = true;
         e.preventDefault();
       }
     });
     
-    // Listen for spacebar release to trigger deceleration and eventual downward movement.
     document.addEventListener('keyup', (e) => {
       if (e.code === 'Space') {
-        isSpacePressed = false;
+        isPressed = false;
         e.preventDefault();
       }
+    });
+    
+    document.addEventListener('touchstart', (e) => {
+      isPressed = true;
+      e.preventDefault();
+    });
+    
+    document.addEventListener('touchend', (e) => {
+      isPressed = false;
+      e.preventDefault();
     });
     
     gameLoop();
