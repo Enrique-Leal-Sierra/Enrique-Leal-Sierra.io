@@ -1,58 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChairForce MVP</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .logo {
-            width: 200px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        h1 {
-            color: #4a90e2;
-            animation: fadeIn 2s;
-        }
-
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChairForce MVP</title>
+  <style>
+    body {
+      background: url('stars.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+    .logo {
+      width: 200px;
+      position: absolute;
+      transform: translateX(-50%);
+    }
+    h1 {
+      color: #4a90e2;
+      animation: fadeIn 2s;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <img src="chairforce.png" alt="ChairForce Logo" class="logo">
-        <h1>Welcome to ChairForce!</h1>
-        <p>Your Next Generation Platform</p>
-    </div>
+  <div class="container">
+    <img src="chairforce.png" alt="ChairForce Logo" class="logo">
+    <h1>ChairForce</h1>
+    <p>We Do Chairs</p>
+  </div>
+  <script>
+    const logo = document.querySelector(".logo");
+    const container = document.querySelector(".container");
+    let positionY = container.clientHeight - logo.clientHeight;
+    let velocity = 0;
+    const acceleration = 0.5;
+    const friction = 0.99;
+    let isSpacePressed = false;
+
+    function updateLogoPosition() {
+      logo.style.top = positionY + "px";
+      logo.style.left = "50%";
+    }
+
+    function gameLoop() {
+      if (isSpacePressed) {
+        velocity += acceleration;
+      } else {
+        velocity *= friction;
+      }
+      
+      positionY -= velocity;
+
+      if (positionY + logo.clientHeight < 0) {
+        positionY = container.clientHeight;
+      }
+
+      updateLogoPosition();
+      requestAnimationFrame(gameLoop);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space") {
+        isSpacePressed = true;
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener("keyup", (e) => {
+      if (e.code === "Space") {
+        isSpacePressed = false;
+        e.preventDefault();
+      }
+    });
+
+    updateLogoPosition();
+    gameLoop();
+  </script>
 </body>
 </html>
