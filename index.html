@@ -1,87 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Space Chair Animation</title>
-  <style>
-    /* Set the full-page space background */
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: url("https://cdn.pixabay.com/photo/2016/11/29/06/15/space-1867284_1280.jpg") no-repeat center center fixed;
-      background-size: cover;
-    }
-    /* The chair image style */
-    #chair {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px; /* adjust size as needed */
-      user-select: none;
-      pointer-events: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChairForce MVP</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .logo {
+            width: 200px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        h1 {
+            color: #4a90e2;
+            animation: fadeIn 2s;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
 </head>
 <body>
-  <!-- Replace with your own chair image URL -->
-  <img id="chair" src="https://www.freepngimg.com/thumb/chair/3-2-chair-png-image.png" alt="Chair">
-  
-  <script>
-    // Get reference to the chair element
-    const chair = document.getElementById('chair');
-    
-    // Set initial properties
-    let posY = window.innerHeight - chair.offsetHeight; // start at the bottom
-    chair.style.top = posY + 'px';
-    
-    let speed = 0;           // current upward speed (in pixels per frame)
-    const acceleration = 0.2; // acceleration per frame while space is held
-    let isMoving = false;    // tracks if the space key is held
-    
-    // Listen for keydown and start moving if space is pressed
-    document.addEventListener('keydown', (e) => {
-      // Check that the key pressed is space and avoid restarting if already moving
-      if (e.code === 'Space' && !isMoving) {
-        isMoving = true;
-        moveChair();
-      }
-    });
-    
-    // When the space key is released, stop accelerating (reset speed)
-    document.addEventListener('keyup', (e) => {
-      if (e.code === 'Space') {
-        isMoving = false;
-        speed = 0;
-      }
-    });
-    
-    // Function to animate the chair upward
-    function moveChair() {
-      // Increase speed as long as the user keeps holding space
-      if (isMoving) {
-        speed += acceleration;
-      }
-      // Update the vertical position (moving upward means decreasing top value)
-      posY -= speed;
-      
-      // When the chair reaches the top of the screen, reset to the bottom
-      if (posY + chair.offsetHeight < 0) {
-        posY = window.innerHeight;
-        speed = 0;
-      }
-      
-      // Apply the updated position
-      chair.style.top = posY + 'px';
-      
-      // Continue the animation
-      requestAnimationFrame(moveChair);
-    }
-    
-    // Optionally, update the starting position when window is resized
-    window.addEventListener('resize', () => {
-      posY = window.innerHeight - chair.offsetHeight;
-      chair.style.top = posY + 'px';
-    });
-  </script>
+    <div class="container">
+        <img src="chairforce.png" alt="ChairForce Logo" class="logo">
+        <h1>Welcome to ChairForce</h1>
+        <p>Your Next Generation Platform</p>
+    </div>
 </body>
 </html>
