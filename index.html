@@ -34,8 +34,8 @@
       animation-timing-function: linear;
     }
     @keyframes twinkle {
-      0%   { opacity: 0.5; }
-      50%  { opacity: 1; }
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
       100% { opacity: 0.5; }
     }
     .shooting-star {
@@ -48,34 +48,9 @@
       animation: shooting 3s linear infinite;
     }
     @keyframes shooting {
-      0% {
-        transform: translate(0, 0);
-        opacity: 1;
-      }
-      80% {
-        opacity: 1;
-      }
-      100% {
-        transform: translate(120vw, 120vh);
-        opacity: 0;
-      }
-    }
-    .text {
-      position: fixed;
-      top: 10%;
-      width: 100%;
-      text-align: center;
-      z-index: 5;
-      opacity: 0;
-      transition: opacity 3s linear;
-    }
-    .chairforce {
-      position: absolute;
-      width: 30vw;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3;
+      0% { transform: translate(0, 0); opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translate(120vw, 120vh); opacity: 0; }
     }
     .text {
       position: fixed;
@@ -128,11 +103,18 @@
       line-height: 1.5;
       margin-bottom: 5px;
     }
+    .chairforce {
+      position: absolute;
+      width: 30vw;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
   </style>
 </head>
 <body>
   <div class="stars" id="stars"></div>
-  
   <div class="text" id="text">
     <h1>Welcome to ChairForce</h1>
     <p>Your Platform for Innovation and Excellence</p>
@@ -153,13 +135,31 @@
       </div>
     </div>
   </div>
-  
   <img src="chairforce.png" alt="ChairForce" class="chairforce" id="chairforce">
+  <audio id="bgAudio" loop>
+    <source src="fire.mp3" type="audio/mpeg">
+    <source src="fire.ogg" type="audio/ogg">
+    <source src="fire.wav" type="audio/wav">
+    Your browser does not support HTML5 audio.
+  </audio>
+  
+  <script>
+    const bgAudio = document.getElementById("bgAudio");
+  
+    function playAudio() {
+      bgAudio.play().catch((error) => {
+        console.log("Audio playback failed:", error);
+      });
+    }
+  
+    document.addEventListener("click", playAudio);
+    document.addEventListener("touchstart", playAudio);
+  </script>
   
   <script>
     const starsContainer = document.getElementById('stars');
     const numberOfStars = 50;
-    for (let i = 0; i < numberOfStars; i++) {
+    for(let i = 0; i < numberOfStars; i++){
       let star = document.createElement('div');
       star.classList.add('star');
       star.style.left = Math.random() * 100 + '%';
@@ -175,14 +175,9 @@
       });
       starsContainer.appendChild(star);
     }
-    
-    const shootingImages = [
-      "dantheman.jpg",
-      "progressive.png"
-    ];
-    
+    const shootingImages = ["dantheman.jpg", "progressive.png"];
     const shootingStarsCount = 2;
-    for (let i = 0; i < shootingStarsCount; i++) {
+    for(let i = 0; i < shootingStarsCount; i++){
       let shootingStar = document.createElement('div');
       shootingStar.classList.add('shooting-star');
       shootingStar.style.top = Math.random() * 100 + '%';
@@ -201,7 +196,6 @@
       });
       document.body.appendChild(shootingStar);
     }
-    
     const chairforce = document.getElementById("chairforce");
     const text = document.getElementById("text");
     const viewportHeight = window.innerHeight;
@@ -211,85 +205,72 @@
     const acceleration = 0.2;
     const decelerationRate = 1.5;
     const downwardSpeed = 0.5;
-    let isPressed = false;
+    let isSpacePressed = false;
     let accelerationTime = 0;
-    
     const fadeStartTime = 1000;
     const fullOpacityTime = 4000;
-    
     const swayAmplitude = 20;
     const swayPeriod = 2000;
-    
-    function updateChairforce() {
+    function updateChairforce(){
       chairY = Math.max(0, Math.min(chairY, viewportHeight));
       chairforce.style.top = chairY + 'px';
     }
-    
-    function updateTextOpacity() {
-      if (accelerationTime > fadeStartTime) {
+    function updateTextOpacity(){
+      if(accelerationTime > fadeStartTime){
         const opacityProgress = Math.min(1, (accelerationTime - fadeStartTime) / (fullOpacityTime - fadeStartTime));
         text.style.opacity = opacityProgress;
       } else {
         text.style.opacity = 0;
       }
     }
-    
-    function updateSway() {
+    function updateSway(){
       let offset = 0;
-      if (Math.abs(velocity) > 0.01) {
+      if(Math.abs(velocity) > 0.01){
         const time = Date.now();
         offset = swayAmplitude * Math.sin((time / swayPeriod) * 2 * Math.PI);
       }
       chairforce.style.transform = "translate(calc(-50% + " + offset + "px), -50%)";
     }
-    
-    function gameLoop() {
-      if (isPressed) {
+    function gameLoop(){
+      if(isSpacePressed){
         velocity += acceleration;
         accelerationTime += 16.67;
       } else {
-        if (velocity > 0) {
+        if(velocity > 0){
           velocity = Math.max(velocity - decelerationRate, 0);
         }
-        if (velocity === 0 && chairY < centerY) {
+        if(velocity === 0 && chairY < centerY){
           velocity = -downwardSpeed;
         }
         accelerationTime = 0;
       }
-      
       chairY -= velocity;
-      
       updateChairforce();
       updateTextOpacity();
       updateSway();
-      
       requestAnimationFrame(gameLoop);
     }
-    
     document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        isPressed = true;
+      if(e.code === 'Space'){
+        isSpacePressed = true;
         e.preventDefault();
       }
     });
-    
     document.addEventListener('keyup', (e) => {
-      if (e.code === 'Space') {
-        isPressed = false;
+      if(e.code === 'Space'){
+        isSpacePressed = false;
         e.preventDefault();
       }
     });
-    
     document.addEventListener('touchstart', (e) => {
-      isPressed = true;
+      isSpacePressed = true;
       e.preventDefault();
     });
-    
     document.addEventListener('touchend', (e) => {
-      isPressed = false;
+      isSpacePressed = false;
       e.preventDefault();
     });
-    
+    document.getElementById("bgAudio").play();
     gameLoop();
   </script>
 </body>
